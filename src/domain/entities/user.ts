@@ -8,8 +8,12 @@ interface UserProps {
   password: string
 }
 export class User {
+  private readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
   private props: UserProps
   constructor (props: Replace<UserProps, { uuid?: string }>) {
+    if(!this.passwordRegex.test(props.password)){
+      throw new Error('password invalid')
+    }
     this.props = {
       uuid: props.uuid ?? randomUUID(),
       email: props.email,
