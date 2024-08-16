@@ -2,15 +2,15 @@ import { randomUUID } from 'crypto'
 import { Replace } from '../utils/replace'
 import { Email } from './email'
 
-interface UserProps {
+interface AccountProps {
   uuid: string 
   email: Email
   password: string
 }
-export class User {
+export class Account {
   private readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
-  private props: UserProps
-  constructor (props: Replace<UserProps, { uuid?: string }>) {
+  private props: AccountProps
+  constructor (props: Replace<AccountProps, { uuid?: string }>) {
     if(!this.passwordRegex.test(props.password)){
       throw new Error('password invalid')
     }
