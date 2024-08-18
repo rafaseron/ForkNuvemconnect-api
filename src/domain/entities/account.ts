@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 import { Replace } from '../utils/replace'
 import { Email } from './email'
 
-interface AccountProps {
+export interface AccountProps {
   uuid: string 
   email: Email
   password: string
