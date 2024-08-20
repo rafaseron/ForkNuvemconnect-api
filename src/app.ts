@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import { accountRoute } from './infra/http/routes/account-routes'
 
 export class App {
@@ -8,6 +9,8 @@ export class App {
 
   constructor () {
     this.routes()
+    this.plugins()
+
   }
 
   routes () {
@@ -15,6 +18,10 @@ export class App {
       return 'Hello World'
     })
     this.server.register(accountRoute)
+  }
+  plugins () {
+    this.server.setSerializerCompiler(serializerCompiler)
+    this.server.setValidatorCompiler(validatorCompiler)
   }
 
 }

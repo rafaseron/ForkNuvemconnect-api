@@ -1,15 +1,17 @@
 import { Account } from '../../../../domain/entities/account'
 import { Email } from '../../../../domain/entities/email'
 import { IAccountRepository } from '../../../../domain/repositories/account-repository'
+import { hashPassword } from '../../../lib/brcypt'
 import { accountModel } from '../model/account-model'
 
 
 export class AccountRepositoryMongoose implements IAccountRepository {
   async save (account: Account): Promise<void> {
+    const hashedPassword = hashPassword(account.password)
     const acc = new accountModel({
       uuid: account.uuid,
       email: account.email.value,
-      password: account.password
+      password: hashedPassword
     })
     acc.save()
   }
