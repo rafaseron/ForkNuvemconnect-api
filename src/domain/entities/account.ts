@@ -9,18 +9,28 @@ export interface AccountProps {
   password: string
 }
 export class Account {
-  private readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
   private props: AccountProps
   constructor (props: Replace<AccountProps, { uuid?: string }>) {
-    if(!this.passwordRegex.test(props.password)){
-      throw new BadRequestError('password invalid')
-    }
     this.props = {
       uuid: props.uuid ?? randomUUID(),
       email: props.email,
       password: props.password
     }
   }
+
+  public static create (email: string, password: string): Account {
+    if(!this.isValidPassword(password)) throw new BadRequestError('Password does not meet the required criteria')
+    return new Account({ email: new Email(email), password })
+  }
+
+  public static reconstitute (uuid: string, email: string, password: string) {
+    return new Account({ uuid, email: new Email(email), password })
+  }
+
+  private static isValidPassword (password: string) {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
+    return passwordRegex.test(password)
+  }  
 
   get uuid () {
     return this.props.uuid
@@ -39,6 +49,7 @@ export class Account {
   }
 
   set password (password: string) {
+    if(!Account.isValidPassword(password)) throw new BadRequestError('Password does not meet the required criteria')
     this.props.password = password
   }
 }
