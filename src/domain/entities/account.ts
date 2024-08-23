@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 import { Replace } from '../utils/replace'
 import { Email } from './email'
+import { BadRequestError } from '../utils/error-handle'
 
 export interface AccountProps {
   uuid: string 
@@ -12,7 +13,7 @@ export class Account {
   private props: AccountProps
   constructor (props: Replace<AccountProps, { uuid?: string }>) {
     if(!this.passwordRegex.test(props.password)){
-      throw new Error('password invalid')
+      throw new BadRequestError('password invalid')
     }
     this.props = {
       uuid: props.uuid ?? randomUUID(),
