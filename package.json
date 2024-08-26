@@ -17,6 +17,7 @@
     "@eslint/js": "^9.9.0",
     "@types/bcrypt": "^5.0.2",
     "@types/eslint__js": "^8.42.3",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^22.2.0",
     "eslint": "^9.9.0",
     "git-commit-msg-linter": "^5.0.8",
@@ -32,6 +33,7 @@
     "fastify": "^4.28.1",
     "fastify-type-provider-zod": "^2.0.0",
     "husky": "^9.1.4",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
     "zod": "^3.23.8"
   }
