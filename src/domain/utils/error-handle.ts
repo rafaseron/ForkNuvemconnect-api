@@ -1,8 +1,12 @@
-class ErrorHandle extends Error {
-  private readonly code: number
+export class ErrorHandle extends Error {
+  private readonly _code: number
   constructor (code: number, message: string) {
     super(message)
-    this.code = code
+    this._code = code
+  }
+
+  getCode (): number {
+    return this._code
   }
 }
 
