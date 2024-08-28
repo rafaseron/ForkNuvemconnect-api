@@ -47,12 +47,6 @@ export async function accountRoute (fastify: FastifyInstance) {
       const accountRepository = new AccountRepositoryMongoose()
       const loginUseCase = new LoginUseCase(accountRepository)
       const token = await loginUseCase.execute({ email, password })
-      if (!token) {
-        return {
-          error: 'Unauthorized',
-          message: 'Invalid email or password'
-        }
-      }
       res.send({ token })
     }
   )
