@@ -37,3 +37,5 @@ pnpm run dev
 # Testes
 pnpm test
 ```
+
+O servidor será iniciado em: http://localhost:3000 | http://127.0.0.1:3000
