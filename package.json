@@ -17,6 +17,7 @@
     "@eslint/js": "^9.9.0",
     "@types/bcrypt": "^5.0.2",
     "@types/eslint__js": "^8.42.3",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.2.0",
     "eslint": "^9.9.0",
     "git-commit-msg-linter": "^5.0.8",
@@ -27,11 +28,14 @@
     "vitest": "^2.0.5"
   },
   "dependencies": {
+    "@fastify/swagger": "^8.15.0",
+    "@fastify/swagger-ui": "^4.1.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "fastify-type-provider-zod": "^2.0.0",
     "husky": "^9.1.4",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
     "zod": "^3.23.8"
   }

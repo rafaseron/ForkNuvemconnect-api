@@ -1,5 +1,10 @@
 import fastify from 'fastify'
-import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
+import {
+  serializerCompiler,
+  validatorCompiler
+} from 'fastify-type-provider-zod'
+import swagger from '@fastify/swagger'
+import swaggerUI from '@fastify/swagger-ui'
 import { accountRoute } from './infra/http/routes/account-routes'
 import { errorHandler } from './infra/http/error-handle.ts/error-handle'
 
@@ -9,9 +14,8 @@ export class App {
   })
 
   constructor () {
-    this.routes()
     this.plugins()
-
+    this.routes()
   }
 
   routes () {
@@ -24,6 +28,22 @@ export class App {
     this.server.setSerializerCompiler(serializerCompiler)
     this.server.setValidatorCompiler(validatorCompiler)
     this.server.setErrorHandler(errorHandler)
-  }
 
+    this.server.register(swagger, {
+      swagger: {
+        info: {
+          title: 'Nuvem Connect - API',
+          description: '',
+          version: '0.1.0'
+        },
+        host: 'localhost:3000',
+        schemes: ['http'],
+        consumes: ['application/json'],
+        produces: ['application/json']
+      }
+    })
+    this.server.register(swaggerUI, {
+      routePrefix: '/docs'
+    })
+  }
 }

@@ -1,14 +1,14 @@
+import bcrypt from 'bcrypt'
 import { genSaltSync, hashSync } from 'bcrypt'
-
 
 function hashPassword (password: string) {
   const salt = genSaltSync(10)
 
   return hashSync(password, salt)
-
 }
 
-
-export {
-  hashPassword
+function comparePassword (providedPassword: string, storedPassword: string) {
+  return bcrypt.compare(providedPassword, storedPassword)
 }
+
+export { hashPassword, comparePassword }
