@@ -10,7 +10,7 @@ export interface AccountProps {
 }
 export class Account {
   private props: AccountProps
-  constructor (props: Replace<AccountProps, { uuid?: string }>) {
+  private constructor (props: Replace<AccountProps, { uuid?: string }>) {
     this.props = {
       uuid: props.uuid ?? randomUUID(),
       email: props.email,

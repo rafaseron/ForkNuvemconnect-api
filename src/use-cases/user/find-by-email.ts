@@ -8,7 +8,7 @@ export class FindByEmail {
   constructor (private accountRepository: IAccountRepository){}
   
   async execute (email: Email): Promise<Account> {
-    const account = await this.accountRepository.findByEmail(email)
+    const account = await this.accountRepository.findByEmail(email.value)
 
     if(!account) {
       throw new NotFoundError('Account not found')

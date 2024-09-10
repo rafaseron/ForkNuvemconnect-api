@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test": "vitest",
-    "test:staged": "vitest --watch=false --passWithNoTests",
+    "test:staged": "vitest --watch=false  ",
     "prepare": "husky"
   },
   "keywords": [],
