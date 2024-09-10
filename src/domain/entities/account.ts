@@ -4,9 +4,10 @@ import { Email } from './email'
 import { BadRequestError } from '../utils/error-handle'
 
 export interface AccountProps {
-  uuid: string 
+  uuid: string
   email: Email
   password: string
+  token?: string
 }
 export class Account {
   private props: AccountProps
@@ -14,7 +15,8 @@ export class Account {
     this.props = {
       uuid: props.uuid ?? randomUUID(),
       email: props.email,
-      password: props.password
+      password: props.password,
+      token: props.token
     }
   }
 
@@ -51,5 +53,13 @@ export class Account {
   set password (password: string) {
     if(!Account.isValidPassword(password)) throw new BadRequestError('Password does not meet the required criteria')
     this.props.password = password
+  }
+
+  get token () {
+    return this.props.token ?? ''
+  }
+
+  set token (token: string) {
+    this.props.token = token
   }
 }
