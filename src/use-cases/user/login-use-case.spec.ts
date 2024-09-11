@@ -17,14 +17,14 @@ describe('LoginUseCase', () => {
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
 
-    const account = new Account({ email, password })
+    const account = Account.create(email.value, password )
     await accountRepository.save(account)
 
     accountRepository.findByEmailPassword = async (
       email: Email,
       password: string
     ) => {
-      const account = await accountRepository.findByEmail(email)
+      const account = await accountRepository.findByEmail(email.value)
       if (account && account.password === password) {
         return 'valid-token'
       }
@@ -40,14 +40,14 @@ describe('LoginUseCase', () => {
     const password = 'securePassword1!'
     const wrongPassword = 'wrongPassword'
 
-    const account = new Account({ email, password })
+    const account = Account.create(email.value, password)
     await accountRepository.save(account)
 
     accountRepository.findByEmailPassword = async (
       email: Email,
       password: string
     ) => {
-      const account = await accountRepository.findByEmail(email)
+      const account = await accountRepository.findByEmail(email.value)
       if (account && account.password === password) {
         return 'valid-token'
       }
@@ -66,7 +66,7 @@ describe('LoginUseCase', () => {
   it('should throw an error if password is empty', async () => {
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
-    const account = new Account({ email, password })
+    const account = Account.create(email.value, password)
     await accountRepository.save(account)
 
     await expect(
@@ -77,11 +77,11 @@ describe('LoginUseCase', () => {
   it('should throw an error if email is empty', async () => {
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
-    const account = new Account({ email, password })
+    const account = Account.create(email.value, password)
     await accountRepository.save(account)
 
     await expect(
       loginUseCase.execute({ email: '', password: password })
-    ).rejects.toThrowError('Email invalid')
+    ).rejects.toThrowError('Invalid email')
   })
 })

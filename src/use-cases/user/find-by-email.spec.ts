@@ -5,12 +5,12 @@ import { Email } from '../../domain/entities/email'
 import { Account } from '../../domain/entities/account'
 
 describe('Find account by email', () => {
-  const email = new Email('fake@email.com')
   const accountRepository = new InMemoryAccountRepository()
-  accountRepository.accounts.push(new Account({ email, password: 'f@k3Password' }))
+  accountRepository.accounts.push(Account.create('fake@email.com', 'f@k3Password'))
   const findByEmail = new FindByEmail(accountRepository)
-
+  
   it('should be able find account by email', async () => {
+    const email = new Email('fake@email.com')
     const account = await findByEmail.execute(email)
 
     expect(account).toBeTruthy()

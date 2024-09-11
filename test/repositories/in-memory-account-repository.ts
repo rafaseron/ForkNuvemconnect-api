@@ -14,10 +14,8 @@ export class InMemoryAccountRepository implements IAccountRepository {
   async save (account: Account): Promise<void> {
     this.accounts.push(account)
   }
-  async findByEmail (email: Email): Promise<Account | null> {
-    const account = this.accounts.find(
-      account => account.email.value === email.value
-    )
+  async findByEmail (email: string): Promise<Account | null> {
+    const account = this.accounts.find(account => account.email.value === email)
 
     if (!account) {
       return null

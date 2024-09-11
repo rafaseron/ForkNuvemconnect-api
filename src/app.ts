@@ -6,6 +6,7 @@ import {
 import swagger from '@fastify/swagger'
 import swaggerUI from '@fastify/swagger-ui'
 import { accountRoute } from './infra/http/routes/account-routes'
+import { errorHandler } from './infra/http/error-handle.ts/error-handle'
 
 export class App {
   server = fastify({
@@ -26,6 +27,7 @@ export class App {
   plugins () {
     this.server.setSerializerCompiler(serializerCompiler)
     this.server.setValidatorCompiler(validatorCompiler)
+    this.server.setErrorHandler(errorHandler)
 
     this.server.register(swagger, {
       swagger: {
