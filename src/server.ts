@@ -4,7 +4,7 @@ const server = new App().server
 
 makeConnection()
   .then(() => {
-    server.listen({ port: 3000 }, (err, address) => {
+    server.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
     
       if(err) {
         server.log.error(err)

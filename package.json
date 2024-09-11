@@ -2,12 +2,13 @@
   "name": "nuvemconnect-api",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node ./dist/src/server.js",
+    "build": "rimraf ./dist && tsc -b .",
     "dev": "tsx watch src/server.ts",
     "test": "vitest",
-    "test:staged": "vitest --watch=false  ",
+    "test:staged": "vitest --watch=false --passWithNoTests",
     "prepare": "husky"
   },
   "keywords": [],
@@ -37,6 +38,7 @@
     "husky": "^9.1.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
+    "rimraf": "^6.0.1",
     "zod": "^3.23.8"
   }
 }
