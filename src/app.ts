@@ -7,6 +7,7 @@ import swagger from '@fastify/swagger'
 import swaggerUI from '@fastify/swagger-ui'
 import { accountRoute } from './infra/http/routes/account-routes'
 import { errorHandler } from './infra/http/error-handle.ts/error-handle'
+import { resolve } from 'node:path'
 
 export class App {
   server = fastify({
@@ -30,17 +31,14 @@ export class App {
     this.server.setErrorHandler(errorHandler)
 
     this.server.register(swagger, {
-      swagger: {
-        info: {
-          title: 'Nuvem Connect - API',
-          description: '',
-          version: '0.1.0'
+      mode: 'static',
+      specification: {
+        path: './src/infra/http/docs/docs.json',
+        postProcessor: function (swaggerObject) {
+          return swaggerObject
         },
-        host: 'localhost:3000',
-        schemes: ['http'],
-        consumes: ['application/json'],
-        produces: ['application/json']
-      }
+        baseDir: resolve(),
+      },
     })
     this.server.register(swaggerUI, {
       routePrefix: '/docs'
