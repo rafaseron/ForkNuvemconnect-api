@@ -6,6 +6,7 @@ export const accountModel = model<Replace<AccountProps, { email: string }>>(
   'Account',
   new Schema({
     uuid: String,
+    name: String,
     email: String,
     password: String,
     token: String

@@ -15,6 +15,7 @@ export class AccountRepositoryMongoose implements IAccountRepository {
     const hashedPassword = hashPassword(account.password)
     const acc = new accountModel({
       uuid: account.uuid,
+      name: account.name,
       email: account.email.value,
       password: hashedPassword
     })
@@ -26,7 +27,12 @@ export class AccountRepositoryMongoose implements IAccountRepository {
     if (!data) {
       return null
     }
-    const acc = Account.reconstitute(data.uuid, data.email, data.password)
+    const acc = Account.reconstitute(
+      data.uuid,
+      data.name,
+      data.email,
+      data.password
+    )
     return acc
   }
 

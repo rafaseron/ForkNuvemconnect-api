@@ -7,7 +7,11 @@ describe('Create account use case', () => {
   it('should be able create a account', async () => {
     const accountRepository = new InMemoryAccountRepository()
     const createAccountUseCase = new CreateAccountUseCase(accountRepository)
-    const account = await createAccountUseCase.execute({ email: 'fake@email.com', password: 'f@k3Password' })
+    const account = await createAccountUseCase.execute({
+      name: 'Fake name',
+      email: 'fake@email.com',
+      password: 'f@k3Password'
+    })
 
     expect(account).toBeInstanceOf(Account)
     expect(accountRepository.accounts).toHaveLength(1)
@@ -17,10 +21,18 @@ describe('Create account use case', () => {
   it('should to throw error if the email already registered', async () => {
     const accountRepository = new InMemoryAccountRepository()
     const createAccountUseCase = new CreateAccountUseCase(accountRepository)
-    await createAccountUseCase.execute({ email: 'fake@email.com', password: 'f@k3Password' })
+    await createAccountUseCase.execute({
+      name: 'Fake name',
+      email: 'fake@email.com',
+      password: 'f@k3Password'
+    })
 
-    expect(() => createAccountUseCase.execute(
-      { email: 'fake@email.com', password: 'f@k3Password' }
-    )).rejects.toThrowError()
+    expect(() =>
+      createAccountUseCase.execute({
+        name: 'Fake name',
+        email: 'fake@email.com',
+        password: 'f@k3Password'
+      })
+    ).rejects.toThrowError()
   })
 })

@@ -12,6 +12,7 @@ export async function accountRoute (fastify: FastifyInstance) {
     {
       schema: {
         body: z.object({
+          name: z.string(),
           email: z.string().email(),
           password: z.string(),
           passwordConfirmation: z.string()
@@ -19,13 +20,19 @@ export async function accountRoute (fastify: FastifyInstance) {
       }
     },
     async (req, res) => {
-      const { email, password, passwordConfirmation } = req.body
-      if(password !=  passwordConfirmation){
-        throw new BadRequestError('password confirmation different from password')
+      const { name, email, password, passwordConfirmation } = req.body
+      if (password != passwordConfirmation) {
+        throw new BadRequestError(
+          'password confirmation different from password'
+        )
       }
       const accountRepository = new AccountRepositoryMongoose()
       const createAccountUseCase = new CreateAccountUseCase(accountRepository)
-      const account = await createAccountUseCase.execute({ email, password })
+      const account = await createAccountUseCase.execute({
+        name,
+        email,
+        password
+      })
       res.send({ uuid: account.uuid })
     }
   )

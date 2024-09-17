@@ -5,6 +5,7 @@ import { BadRequestError } from '../utils/error-handle'
 
 export interface AccountProps {
   uuid: string
+  name: string
   email: Email
   password: string
   token?: string
@@ -14,28 +15,44 @@ export class Account {
   private constructor (props: Replace<AccountProps, { uuid?: string }>) {
     this.props = {
       uuid: props.uuid ?? randomUUID(),
+      name: props.name,
       email: props.email,
       password: props.password,
       token: props.token
     }
   }
 
-  public static create (email: string, password: string): Account {
-    if(!this.isValidPassword(password)) throw new BadRequestError('Password does not meet the required criteria')
-    return new Account({ email: new Email(email), password })
+  public static create (name: string, email: string, password: string): Account {
+    if (!this.isValidPassword(password))
+      throw new BadRequestError('Password does not meet the required criteria')
+    return new Account({ name, email: new Email(email), password })
   }
 
-  public static reconstitute (uuid: string, email: string, password: string) {
-    return new Account({ uuid, email: new Email(email), password })
+  public static reconstitute (
+    uuid: string,
+    name: string,
+    email: string,
+    password: string
+  ) {
+    return new Account({ uuid, name, email: new Email(email), password })
   }
 
   private static isValidPassword (password: string) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
     return passwordRegex.test(password)
-  }  
+  }
 
   get uuid () {
     return this.props.uuid
+  }
+
+  get name () {
+    return this.props.name
+  }
+
+  set name (name: string) {
+    this.props.name = name
   }
 
   get email () {
@@ -51,7 +68,8 @@ export class Account {
   }
 
   set password (password: string) {
-    if(!Account.isValidPassword(password)) throw new BadRequestError('Password does not meet the required criteria')
+    if (!Account.isValidPassword(password))
+      throw new BadRequestError('Password does not meet the required criteria')
     this.props.password = password
   }
 

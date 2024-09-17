@@ -14,10 +14,11 @@ describe('LoginUseCase', () => {
   })
 
   it('should return a token if email and password are correct', async () => {
+    const name = 'Teste name'
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
 
-    const account = Account.create(email.value, password )
+    const account = Account.create(name, email.value, password)
     await accountRepository.save(account)
 
     accountRepository.findByEmailPassword = async (
@@ -36,11 +37,12 @@ describe('LoginUseCase', () => {
   })
 
   it('should throw an error if email or password is incorrect', async () => {
+    const name = 'Teste name'
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
     const wrongPassword = 'wrongPassword'
 
-    const account = Account.create(email.value, password)
+    const account = Account.create(name, email.value, password)
     await accountRepository.save(account)
 
     accountRepository.findByEmailPassword = async (
@@ -64,9 +66,10 @@ describe('LoginUseCase', () => {
   })
 
   it('should throw an error if password is empty', async () => {
+    const name = 'Teste name'
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
-    const account = Account.create(email.value, password)
+    const account = Account.create(name, email.value, password)
     await accountRepository.save(account)
 
     await expect(
@@ -75,9 +78,10 @@ describe('LoginUseCase', () => {
   })
 
   it('should throw an error if email is empty', async () => {
+    const name = 'Teste name'
     const email = new Email('test@example.com')
     const password = 'securePassword1!'
-    const account = Account.create(email.value, password)
+    const account = Account.create(name, email.value, password)
     await accountRepository.save(account)
 
     await expect(
