@@ -41,7 +41,6 @@ export class AccountRepositoryMongoose implements IAccountRepository {
     password: string
   ): Promise<string | null> {
     const data = await accountModel.findOne({ email: email.value })
-
     if (!data) {
       return null
     }
@@ -62,5 +61,13 @@ export class AccountRepositoryMongoose implements IAccountRepository {
     }
 
     return token
+  }
+
+  async updatePassword (email: string, password: string): Promise<void> {
+    const hashedPassword = hashPassword(password)
+    await accountModel.updateOne(
+      { email },
+      { $set: { password: hashedPassword } }
+    )
   }
 }
