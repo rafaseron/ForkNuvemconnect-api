@@ -37,8 +37,8 @@ export class App {
         postProcessor: function (swaggerObject) {
           return swaggerObject
         },
-        baseDir: resolve(),
-      },
+        baseDir: resolve()
+      }
     })
     this.server.register(swaggerUI, {
       routePrefix: '/docs'
