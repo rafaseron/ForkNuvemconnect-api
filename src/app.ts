@@ -8,10 +8,11 @@ import swaggerUI from '@fastify/swagger-ui'
 import { accountRoute } from './infra/http/routes/account-routes'
 import { errorHandler } from './infra/http/error-handle.ts/error-handle'
 import { resolve } from 'node:path'
+import cors from '@fastify/cors'
 
 export class App {
   server = fastify({
-    logger: false
+    logger: true
   })
 
   constructor () {
@@ -29,6 +30,7 @@ export class App {
     this.server.setSerializerCompiler(serializerCompiler)
     this.server.setValidatorCompiler(validatorCompiler)
     this.server.setErrorHandler(errorHandler)
+    this.server.register(cors, { origin: '*' })
 
     this.server.register(swagger, {
       mode: 'static',

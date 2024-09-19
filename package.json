@@ -29,6 +29,7 @@
     "vitest": "^2.0.5"
   },
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
     "@fastify/swagger": "^8.15.0",
     "@fastify/swagger-ui": "^4.1.0",
     "bcrypt": "^5.1.1",
