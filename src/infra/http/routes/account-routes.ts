@@ -6,6 +6,9 @@ import { AccountRepositoryMongoose } from '../../database/mongoose/repositories/
 import { BadRequestError } from '../../../domain/utils/error-handle'
 import { LoginUseCase } from '../../../use-cases/user/login-use-case'
 import { resetPasswordUseCase } from '../../../use-cases/user/reset-password-use-case'
+import { RequestPasswordResetUseCase } from '../../../use-cases/user/request-password-reset-use-case'
+import { MailtrapSendEmail } from '../../lib/mail-trap-send-email'
+import { PasswordResetTokenRepositoryMongoose } from '../../database/mongoose/repositories/password-reset-token-repository-mongoose'
 
 export async function accountRoute (fastify: FastifyInstance) {
   fastify.withTypeProvider<ZodTypeProvider>().post(
@@ -57,29 +60,27 @@ export async function accountRoute (fastify: FastifyInstance) {
     }
   )
 
-  // fastify.withTypeProvider<ZodTypeProvider>().post(
-  //   '/forgot-password',
-  //   {
-  //     schema: {
-  //       body: z.object({
-  //         email: z.string().email()
-  //       })
-  //     }
-  //   },
-  //   async (req, res) => {
-  //     const { email } = req.body
+  fastify.withTypeProvider<ZodTypeProvider>().post(
+    '/forgot-password',
+    {
+      schema: {
+        body: z.object({
+          email: z.string().email()
+        })
+      }
+    },
+    async (req, res) => {
+      const { email } = req.body
 
-  //     const accountRepository = new AccountRepositoryMongoose()
-  //     const account = await accountRepository.findByEmail(email)
-  //     if (!account) {
-  //       throw new BadRequestError('E-mail not found')
-  //     }
-  //     sendEmail = new sendEmailUseCase(accountRepository)
-  //     const verificationCode = await sendEmail.execute(email)
+      const passwordResetTokenRepository = new PasswordResetTokenRepositoryMongoose()
+      const sendEmail = new MailtrapSendEmail()
 
-  //     res.send({ verificationCode })
-  //   }
-  // )
+      const requestPasswordResetUseCase = new RequestPasswordResetUseCase(passwordResetTokenRepository, sendEmail)
+      await requestPasswordResetUseCase.execute(email)
+
+      res.status(200).send()
+    }
+  )
 
   fastify.withTypeProvider<ZodTypeProvider>().put(
     '/reset-password',
