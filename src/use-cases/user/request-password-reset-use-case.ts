@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto'
 import { PasswordResetTokenRepository } from '../../domain/repositories/password-reset-token-repository'
 import { nanoid } from 'nanoid'
 import { SendMail } from '../../domain/shared/send-email'
+import { PasswordResetToken } from '../../domain/entities/passwordResetToken'
 
 
 export class RequestPasswordResetUseCase {
@@ -16,6 +16,7 @@ export class RequestPasswordResetUseCase {
       return
     }
     const token = nanoid(6)
+    const passwordResetToken = PasswordResetToken.create(email, token)
     this.sendEmail.handle({
       from: {
         name: 'Team nuvem connect',
@@ -27,6 +28,6 @@ export class RequestPasswordResetUseCase {
         <p> seu código: ${token} </p>
       `
     })
-    await this.passwordResetToken.savePasswordResetToken(randomUUID(), token, email)
+    await this.passwordResetToken.savePasswordResetToken(passwordResetToken)
   }
 }
