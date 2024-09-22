@@ -1,6 +1,8 @@
 import nodemailer, { Transporter } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 import { dataType, SendMail } from '../../domain/shared/send-email'
+import { mailEnv } from '../config/env'
+
 
 type mailClientType = Transporter<SMTPTransport.SentMessageInfo, SMTPTransport.Options>
 
@@ -8,11 +10,11 @@ export class MailtrapSendEmail implements SendMail{
   private mailClient: mailClientType
   constructor () {
     this.mailClient = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
+      host: mailEnv.HOST,
+      port: mailEnv.PORT,
       auth: {
-        user: '5be8ee2942115d',
-        pass: '854cc7317511f2'
+        user: mailEnv.USER,
+        pass: mailEnv.PASS
       }
     })
   }
