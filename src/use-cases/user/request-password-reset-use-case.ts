@@ -11,7 +11,6 @@ export class RequestPasswordResetUseCase {
   ){}
   async execute (email: string) {
     const tokenAlreadyExists = await this.passwordResetToken.existToken(email)
-    console.log(tokenAlreadyExists)
     if(tokenAlreadyExists) {
       return
     }
@@ -29,5 +28,10 @@ export class RequestPasswordResetUseCase {
       `
     })
     await this.passwordResetToken.savePasswordResetToken(passwordResetToken)
+
+    return {
+      tokenUUID: passwordResetToken.uuid,
+      token
+    }
   }
 }

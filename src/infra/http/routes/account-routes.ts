@@ -42,7 +42,7 @@ export async function accountRoute (fastify: FastifyInstance) {
   )
 
   fastify.withTypeProvider<ZodTypeProvider>().post(
-    '/login',
+    '/account/login',
     {
       schema: {
         body: z.object({
@@ -61,7 +61,7 @@ export async function accountRoute (fastify: FastifyInstance) {
   )
 
   fastify.withTypeProvider<ZodTypeProvider>().post(
-    'account/request-password-reset',
+    '/account/request-password-reset',
     {
       schema: {
         body: z.object({
@@ -76,14 +76,14 @@ export async function accountRoute (fastify: FastifyInstance) {
       const sendEmail = new MailtrapSendEmail()
 
       const requestPasswordResetUseCase = new RequestPasswordResetUseCase(passwordResetTokenRepository, sendEmail)
-      await requestPasswordResetUseCase.execute(email)
+      const output = await requestPasswordResetUseCase.execute(email)
 
-      res.status(200).send()
+      res.status(200).send(output)
     }
   )
 
   fastify.withTypeProvider<ZodTypeProvider>().put(
-    'account/reset-password',
+    '/account/reset-password',
     {
       schema: {
         body: z.object({
