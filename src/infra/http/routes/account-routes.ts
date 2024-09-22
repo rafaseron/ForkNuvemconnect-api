@@ -61,7 +61,7 @@ export async function accountRoute (fastify: FastifyInstance) {
   )
 
   fastify.withTypeProvider<ZodTypeProvider>().post(
-    '/forgot-password',
+    'account/request-password-reset',
     {
       schema: {
         body: z.object({
@@ -83,10 +83,12 @@ export async function accountRoute (fastify: FastifyInstance) {
   )
 
   fastify.withTypeProvider<ZodTypeProvider>().put(
-    '/reset-password',
+    'account/reset-password',
     {
       schema: {
         body: z.object({
+          tokenUUID: z.string().uuid(),
+          token: z.string().length(6),
           email: z.string().email(),
           password: z.string(),
           passwordConfirmation: z.string()
@@ -94,16 +96,17 @@ export async function accountRoute (fastify: FastifyInstance) {
       }
     },
     async (req, res) => {
-      const { email, password, passwordConfirmation } = req.body
+      const { token, tokenUUID, email, password, passwordConfirmation } = req.body
       if (password != passwordConfirmation) {
         throw new BadRequestError(
           'password confirmation different from password'
         )
       }
       const accountRepository = new AccountRepositoryMongoose()
-      const resetPassword = new resetPasswordUseCase(accountRepository)
-      const result = await resetPassword.execute({ email, password })
-      return res.send({ message: result })
+      const passwordResetTokenRepository = new PasswordResetTokenRepositoryMongoose()
+      const resetPassword = new resetPasswordUseCase(passwordResetTokenRepository, accountRepository)
+      await resetPassword.execute({ tokenUUID, token, email, password })
+      return res.status(200).send()
     }
   )
 }
