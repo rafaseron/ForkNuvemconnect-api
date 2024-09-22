@@ -23,7 +23,7 @@ export class Account {
   }
 
   public static create (name: string, email: string, password: string): Account {
-    if (!this.isValidPassword(password))
+    if (!Account.isValidPassword(password))
       throw new BadRequestError('Password does not meet the required criteria')
     return new Account({ name, email: new Email(email), password })
   }
@@ -37,7 +37,7 @@ export class Account {
     return new Account({ uuid, name, email: new Email(email), password })
   }
 
-  private static isValidPassword (password: string) {
+  static isValidPassword (password: string) {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
     return passwordRegex.test(password)
