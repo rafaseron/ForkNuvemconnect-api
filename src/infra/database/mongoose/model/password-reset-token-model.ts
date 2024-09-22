@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose'
 
 const schema = new Schema({
   uuid: String,
-  toke: String,
+  token: String,
   email: String,
   createdAt: { type: Date, default: Date.now }
 })
