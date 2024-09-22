@@ -121,7 +121,7 @@
         }
       }
     },
-    "/login": {
+    "/account/login": {
       "post": {
         "summary": "Login to an existing account",
         "tags": ["Account"],
@@ -179,7 +179,67 @@
         }
       }
     },
-    "/reset-password": {
+    "/account/request-password-reset": {
+      "post": {
+        "summary": "request password reset",
+        "tags": ["Account"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful password reset request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tokenUUID": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "token": {
+                      "type": "string",
+                      "pattern": "^([a-zA-Z])[a-zA-Z0-9]{6}$"
+                    } 
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/reset-password": {
       "post": {
         "summary": "Password reset",
         "tags": ["Account"],
@@ -190,6 +250,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "tokenUUID": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "token": {
+                    "type": "string",
+                    "pattern": "^(?=.*[a-zA-Z])[a-zA-Z0-9]{6}$"
+                  },
                   "email": {
                     "type": "string",
                     "format": "email"
@@ -204,7 +272,7 @@
                     "minLength": 8
                   }
                 },
-                "required": ["email", "password", "passwordConfirmation"]
+                "required": ["tokenUUID", "token", "email", "password", "passwordConfirmation"]
               }
             }
           }
