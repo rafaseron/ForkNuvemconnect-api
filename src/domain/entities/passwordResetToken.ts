@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { BadRequestError } from '../utils/error-handle'
+import { UnprocessableEntityError } from '../utils/error-handle'
 import { Email } from './email'
 
 
@@ -22,10 +22,10 @@ export class PasswordResetToken {
   static create (email: string, token: string) {
 
     /* if(token.length !== 6){
-      throw new BadRequestError('token invalid')
+      throw new UnprocessableEntityError('token invalid')
     } */
     if(!PasswordResetToken.isValidToken(token)){
-      throw new BadRequestError('token invalid')
+      throw new UnprocessableEntityError('token invalid')
     }
     
     return new PasswordResetToken({

@@ -1,7 +1,7 @@
 import { Account } from '../../domain/entities/account'
 import { IAccountRepository } from '../../domain/repositories/account-repository'
 import { PasswordResetTokenRepository } from '../../domain/repositories/password-reset-token-repository'
-import { BadRequestError, NotFoundError } from '../../domain/utils/error-handle'
+import { UnprocessableEntityError, NotFoundError } from '../../domain/utils/error-handle'
 
 interface RequestResetPassword {
   token: string
@@ -24,11 +24,11 @@ export class resetPasswordUseCase {
       throw new NotFoundError('Password reset token not found')
     }
     if(passwordResetToken.token !== token) {
-      throw new BadRequestError('mismatched token')
+      throw new UnprocessableEntityError('mismatched token')
     }
   
     if(!Account.isValidPassword(password)){
-      throw new BadRequestError('Password does not meet the required criteria')
+      throw new UnprocessableEntityError('Password does not meet the required criteria')
     }
 
     await this.accountRepository.updatePassword(email, password)

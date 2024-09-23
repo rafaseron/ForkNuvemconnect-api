@@ -1,6 +1,6 @@
 import { Account } from '../../domain/entities/account'
 import { IAccountRepository } from '../../domain/repositories/account-repository'
-import { BadRequestError } from '../../domain/utils/error-handle'
+import { UnprocessableEntityError } from '../../domain/utils/error-handle'
 
 interface RequestCreateAccount {
   name: string
@@ -18,7 +18,7 @@ export class CreateAccountUseCase {
   }: RequestCreateAccount): Promise<Account> {
     const accountAlreadyExist = await this.accountRepository.findByEmail(email)
     if (accountAlreadyExist) {
-      throw new BadRequestError('Account already exist')
+      throw new UnprocessableEntityError('Account already exist')
     }
 
     const account = Account.create(name, email, password)

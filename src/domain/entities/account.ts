@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { Replace } from '../utils/replace'
 import { Email } from './email'
-import { BadRequestError } from '../utils/error-handle'
+import { UnprocessableEntityError } from '../utils/error-handle'
 
 export interface AccountProps {
   uuid: string
@@ -24,7 +24,7 @@ export class Account {
 
   public static create (name: string, email: string, password: string): Account {
     if (!Account.isValidPassword(password))
-      throw new BadRequestError('Password does not meet the required criteria')
+      throw new UnprocessableEntityError('Password does not meet the required criteria')
     return new Account({ name, email: new Email(email), password })
   }
 
@@ -69,7 +69,7 @@ export class Account {
 
   set password (password: string) {
     if (!Account.isValidPassword(password))
-      throw new BadRequestError('Password does not meet the required criteria')
+      throw new UnprocessableEntityError('Password does not meet the required criteria')
     this.props.password = password
   }
 

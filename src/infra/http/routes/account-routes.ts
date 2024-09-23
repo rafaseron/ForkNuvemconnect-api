@@ -3,7 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { CreateAccountUseCase } from '../../../use-cases/user/create-account-use-cases'
 import { AccountRepositoryMongoose } from '../../database/mongoose/repositories/account-repository-mongoose'
-import { BadRequestError } from '../../../domain/utils/error-handle'
+import { UnprocessableEntityError } from '../../../domain/utils/error-handle'
 import { LoginUseCase } from '../../../use-cases/user/login-use-case'
 import { resetPasswordUseCase } from '../../../use-cases/user/reset-password-use-case'
 import { RequestPasswordResetUseCase } from '../../../use-cases/user/request-password-reset-use-case'
@@ -26,7 +26,7 @@ export async function accountRoute (fastify: FastifyInstance) {
     async (req, res) => {
       const { name, email, password, passwordConfirmation } = req.body
       if (password != passwordConfirmation) {
-        throw new BadRequestError(
+        throw new UnprocessableEntityError(
           'password confirmation different from password'
         )
       }
@@ -98,7 +98,7 @@ export async function accountRoute (fastify: FastifyInstance) {
     async (req, res) => {
       const { token, tokenUUID, email, password, passwordConfirmation } = req.body
       if (password != passwordConfirmation) {
-        throw new BadRequestError(
+        throw new UnprocessableEntityError(
           'password confirmation different from password'
         )
       }
