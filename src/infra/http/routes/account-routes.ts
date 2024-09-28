@@ -75,7 +75,8 @@ export async function accountRoute (fastify: FastifyInstance) {
       const passwordResetTokenRepository = new PasswordResetTokenRepositoryMongoose()
       const sendEmail = new MailtrapSendEmail()
 
-      const requestPasswordResetUseCase = new RequestPasswordResetUseCase(passwordResetTokenRepository, sendEmail)
+      const accountRepository = new AccountRepositoryMongoose()
+      const requestPasswordResetUseCase = new RequestPasswordResetUseCase(accountRepository, passwordResetTokenRepository, sendEmail)
       const output = await requestPasswordResetUseCase.execute(email)
 
       res.status(200).send(output)
