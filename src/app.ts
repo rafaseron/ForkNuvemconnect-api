@@ -27,10 +27,11 @@ export class App {
     this.server.register(accountRoute)
   }
   plugins () {
+    this.server.register(cors, { origin: '*' })
     this.server.setSerializerCompiler(serializerCompiler)
     this.server.setValidatorCompiler(validatorCompiler)
     this.server.setErrorHandler(errorHandler)
-    this.server.register(cors, { origin: '*' })
+    //this.server.register(cors, {origin: '*'})
 
     this.server.register(swagger, {
       mode: 'static',
