@@ -9,6 +9,7 @@ export interface AccountProps {
   email: Email
   password: string
   token?: string
+  isActive: boolean
 }
 export class Account {
   private props: AccountProps
@@ -18,23 +19,25 @@ export class Account {
       name: props.name,
       email: props.email,
       password: props.password,
-      token: props.token
+      token: props.token,
+      isActive: props.isActive
     }
   }
 
   public static create (name: string, email: string, password: string): Account {
     if (!Account.isValidPassword(password))
       throw new UnprocessableEntityError('Password does not meet the required criteria')
-    return new Account({ name, email: new Email(email), password })
+    return new Account({ name, email: new Email(email), password, isActive: false })
   }
 
   public static reconstitute (
     uuid: string,
     name: string,
     email: string,
-    password: string
+    password: string,
+    isActive: boolean
   ) {
-    return new Account({ uuid, name, email: new Email(email), password })
+    return new Account({ uuid, name, email: new Email(email), password, isActive })
   }
 
   static isValidPassword (password: string) {
@@ -79,5 +82,13 @@ export class Account {
 
   set token (token: string) {
     this.props.token = token
+  }
+
+  get isActive (): boolean {
+    return this.props.isActive
+  }
+  
+  set isActive (isActive: boolean) {
+    this.props.isActive = isActive
   }
 }
