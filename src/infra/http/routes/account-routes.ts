@@ -9,6 +9,7 @@ import { resetPasswordUseCase } from '../../../use-cases/user/reset-password-use
 import { RequestPasswordResetUseCase } from '../../../use-cases/user/request-password-reset-use-case'
 import { MailtrapSendEmail } from '../../lib/mail-trap-send-email'
 import { PasswordResetTokenRepositoryMongoose } from '../../database/mongoose/repositories/password-reset-token-repository-mongoose'
+import { UpdateAccountUseCase } from '../../../use-cases/user/update-account-use-case'
 
 export async function accountRoute (fastify: FastifyInstance) {
   fastify.withTypeProvider<ZodTypeProvider>().post(
@@ -108,6 +109,26 @@ export async function accountRoute (fastify: FastifyInstance) {
       const resetPassword = new resetPasswordUseCase(passwordResetTokenRepository, accountRepository)
       await resetPassword.execute({ tokenUUID, token, email, password })
       return res.status(200).send()
+    }
+  )
+
+  fastify.withTypeProvider<ZodTypeProvider>().get(
+    '/account/activate/:uuid',
+    {
+      schema: {
+        params: z.object({
+          uuid: z.string().uuid()
+        })
+      }
+    },
+    async (req, res) => {
+      const accountRepository = new AccountRepositoryMongoose()
+      const updateAccountUseCase = new UpdateAccountUseCase(accountRepository)
+
+      await updateAccountUseCase.execute(req.params.uuid, { isActive: true })
+
+      res.status(200).send()
+
     }
   )
 }
