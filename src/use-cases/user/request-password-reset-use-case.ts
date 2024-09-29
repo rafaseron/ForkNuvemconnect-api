@@ -1,5 +1,5 @@
 import { PasswordResetTokenRepository } from '../../domain/repositories/password-reset-token-repository'
-import { nanoid } from 'nanoid'
+//import { nanoid } from 'nanoid'
 import { SendMail } from '../../domain/shared/send-email'
 import { PasswordResetToken } from '../../domain/entities/passwordResetToken'
 import { IAccountRepository } from '../../domain/repositories/account-repository'
@@ -17,6 +17,8 @@ export class RequestPasswordResetUseCase {
     if(tokenAlreadyExists) {
       return
     }
+
+    const { nanoid } = await import('nanoid')
     const token = nanoid(6)
     const passwordResetToken = PasswordResetToken.create(email, token)
     const account = <Account>await this.accountRepository.findByEmail(email)
