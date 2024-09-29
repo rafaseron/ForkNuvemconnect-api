@@ -1,5 +1,6 @@
 import { Email } from '../../domain/entities/email'
 import { IAccountRepository } from '../../domain/repositories/account-repository'
+import { UnprocessableEntityError } from '../../domain/utils/error-handle'
 
 interface RequestLogin {
   email: string
@@ -17,7 +18,7 @@ export class LoginUseCase {
       request.password
     )
     if (!token) {
-      throw new Error('Invalid email or password')
+      throw new UnprocessableEntityError('Invalid email or password')
     }
 
     return token

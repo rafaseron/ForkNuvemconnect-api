@@ -67,56 +67,10 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "invalidEmail": {
-                    "value": {
-                      "message": "Invalid input",
-                      "errors": {
-                        "email": ["Invalid email"]
-                      }
-                    }
-                  },
-                  "invalidPassword": {
-                    "value": {
-                      "error": "Bad Request",
-                      "message": "Password does not meet the required criteria"
-                    }
-                  },
-                  "accountExists": {
-                    "value": {
-                      "error": "Bad Request",
-                      "message": "Account already exists"
-                    }
-                  },
-                  "passwordMismatch": {
-                    "value": {
-                      "error": "Invalid input",
-                      "message": "Password confirmation different from password"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
           }
         }
       }
@@ -162,19 +116,25 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnprocessableEntity"
+            },
+            "examples": {
+              "generalError": {
+                "$ref": "#/components/examples/generalError"
+              },
+              "invalidEmailOrPassword": {
+                "$ref": "#/components/examples/invalidEmailOrPassword"
               }
             }
+          }
+        }
           }
         }
       }
@@ -222,25 +182,16 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
           }
         }
       }
     },
     "/account/reset-password": {
-      "post": {
+      "put": {
         "summary": "Password reset",
         "tags": ["Account"],
         "requestBody": {
@@ -279,23 +230,16 @@
         },
         "responses": {
           "200": {
-            "description": "Password updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Password updated successfully"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Password updated successfully"
           },
           "400": {
-            "description": "Bad request",
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/json": {
                 "schema": {
@@ -305,9 +249,138 @@
                       "type": "string"
                     }
                   }
+                },
+                "examples": {
+                  "generalError": {
+                    "$ref": "#/components/examples/generalError"
+                  },
+                  "passwordMismatch": {
+                    "$ref": "#/components/examples/passwordMismatch"
+                  },
+                  "invalidPassword": {
+                    "$ref": "#/components/examples/passwordMismatch"
+                  }
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "examples": {
+              "missingField": {
+                "value": {
+                  "message": "string",
+                  "errors": {
+                    "field": ["required"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "Unprocessable Entity",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "the resource could not be found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "examples": {
+              "generalError": {
+                "value": {
+                  "message": "string"
+                }
+              },
+              "NotFoundPasswordResetToken": {
+                "description": "password reset token could not be found",
+                "value": {
+                  "message": "Password reset token not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "generalError": {
+        "value": {
+          "message": "string"
+        }
+      },
+      "invalidPassword": {
+        "value": {
+          "message": "Password does not meet the required criteria"
+        }
+      },
+      "accountExists": {
+        "value": {
+          "message": "Account already exists"
+        }
+      },
+      "passwordMismatch": {
+        "value": {
+          "message": "Password confirmation different from password"
+        }
+      },
+      "invalidEmailOrPassword":{
+        "value": {
+          "message": "Invalid email or password"
+        }
+      }
+    },
+    "schemas": {
+      "UnprocessableEntity": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
           }
         }
       }
