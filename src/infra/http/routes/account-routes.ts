@@ -32,7 +32,8 @@ export async function accountRoute (fastify: FastifyInstance) {
         )
       }
       const accountRepository = new AccountRepositoryMongoose()
-      const createAccountUseCase = new CreateAccountUseCase(accountRepository)
+      const sendEmail = new MailtrapSendEmail()
+      const createAccountUseCase = new CreateAccountUseCase(accountRepository, sendEmail)
       const account = await createAccountUseCase.execute({
         name,
         email,
