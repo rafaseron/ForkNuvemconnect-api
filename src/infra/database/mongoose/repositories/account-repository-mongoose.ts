@@ -17,7 +17,8 @@ export class AccountRepositoryMongoose implements IAccountRepository {
       uuid: account.uuid,
       name: account.name,
       email: account.email.value,
-      password: hashedPassword
+      password: hashedPassword,
+      isActive: account.isActive
     })
     acc.save()
   }

@@ -24,10 +24,10 @@ export class Account {
     }
   }
 
-  public static create (name: string, email: string, password: string): Account {
+  public static create (name: string, email: string, password: string, isActive?: boolean | null): Account {
     if (!Account.isValidPassword(password))
       throw new UnprocessableEntityError('Password does not meet the required criteria')
-    return new Account({ name, email: new Email(email), password, isActive: false })
+    return new Account({ name, email: new Email(email), password, isActive: isActive ?? false })
   }
 
   public static reconstitute (
