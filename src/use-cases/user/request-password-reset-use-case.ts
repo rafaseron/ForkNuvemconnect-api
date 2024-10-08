@@ -40,8 +40,8 @@ export class RequestPasswordResetUseCase {
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
           <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz@0,9..40;1,9..40&display=swap" rel="stylesheet">
       </head>
-      <body style="font-family: 'DM Sans', sans-serif; font-weight: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 98vh; margin: 2rem 0;">
-        <div style="max-width: 22.5rem; width: 100%; box-shadow: 0px 4px 100px 0px #0000000D; padding: 0 1.78125rem; text-align: center;">
+      <body style="font-family: 'DM Sans', sans-serif; font-weight: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0;">
+        <div style="max-width: 22.5rem; box-shadow: 0px 4px 100px 0px #0000000D; padding: 0 1.78125rem; text-align: center;">
               <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; margin: 3rem 0 4.625rem 0">
                   <img src="https://raw.githubusercontent.com/WendelSantosNunes/imagem/854c2b7f33bc4c4d59f97cb81cf4ca988048a34a/logo-mobile.svg" alt="Imagem da logo">
                   <h1 style="font-size: 1rem; font-family: 'Poppins', sans-serif; margin: 0; color: #091A36;">NuvemConnect</h1>
@@ -55,9 +55,9 @@ export class RequestPasswordResetUseCase {
 
               <p style="font-weight: 700; font-size: 1.25rem; margin: 0 0 2.5rem 0;">${token}</p>
 
-              <p style="font-size: 0.875rem; text-align: left; margin: 0 0 2.5rem 0;">Digite este código na página de redefinição de senha para criar uma nova senha.</p>
+              <p style="font-size: 0.875rem; text-align: center; margin: 0 0 2.5rem 0;">Digite este código na página de redefinição de senha para criar uma nova senha.</p>
               
-              <p style="font-size: 0.75rem; text-align: left; color: #6A7686; font-size: 0.875rem; margin: 0 0 9.1875rem 0;">
+              <p style="font-size: 0.75rem; text-align: center; color: #6A7686; font-size: 0.875rem; margin: 0 0 9.1875rem 0;">
                   Se você não solicitou essa mudança, por favor, entre em contato com nosso suporte imediatamente.
               </p>
 

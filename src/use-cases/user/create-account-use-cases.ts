@@ -50,8 +50,8 @@ export class CreateAccountUseCase {
               <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
               <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz@0,9..40;1,9..40&display=swap" rel="stylesheet">
           </head>
-          <body style="font-family: 'DM Sans', sans-serif; font-weight: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 98vh; margin: 2rem 0">
-            <div style="max-width: 22.5rem; width: 100%; box-shadow: 0px 4px 100px 0px #0000000D; padding: 0 1.78125rem; text-align: center;">
+          <body style="font-family: 'DM Sans', sans-serif; font-weight: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0">
+            <div style="max-width: 22.5rem; box-shadow: 0px 4px 100px 0px #0000000D; padding: 0 1.78125rem; text-align: center;">
                   <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; margin: 3rem 0 4.375rem 0">
                       <img src="https://raw.githubusercontent.com/WendelSantosNunes/imagem/854c2b7f33bc4c4d59f97cb81cf4ca988048a34a/logo-mobile.svg" alt="Imagem da logo">
                       <h1 style="font-size: 1rem;font-family: 'Poppins', sans-serif; margin: 0; color: #091A36;">NuvemConnect</h1>
