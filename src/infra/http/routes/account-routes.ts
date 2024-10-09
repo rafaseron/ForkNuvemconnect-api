@@ -3,13 +3,18 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { CreateAccountUseCase } from '../../../use-cases/user/create-account-use-cases'
 import { AccountRepositoryMongoose } from '../../database/mongoose/repositories/account-repository-mongoose'
-import { UnprocessableEntityError } from '../../../domain/utils/error-handle'
+import { NotFoundError, UnprocessableEntityError } from '../../../domain/utils/error-handle'
 import { LoginUseCase } from '../../../use-cases/user/login-use-case'
 import { resetPasswordUseCase } from '../../../use-cases/user/reset-password-use-case'
 import { RequestPasswordResetUseCase } from '../../../use-cases/user/request-password-reset-use-case'
 import { MailtrapSendEmail } from '../../lib/mail-trap-send-email'
 import { PasswordResetTokenRepositoryMongoose } from '../../database/mongoose/repositories/password-reset-token-repository-mongoose'
 import { UpdateAccountUseCase } from '../../../use-cases/user/update-account-use-case'
+import { getUserInfo, oauth2Client } from '../../lib/google-api'
+import { FindByEmail } from '../../../use-cases/user/find-by-email'
+import { generateRandomPassword } from '../../../domain/utils/generate-random-password'
+import { generateToken } from '../../lib/jwt'
+import { Email } from '../../../domain/entities/email'
 
 export async function accountRoute (fastify: FastifyInstance) {
   fastify.withTypeProvider<ZodTypeProvider>().post(
@@ -132,4 +137,56 @@ export async function accountRoute (fastify: FastifyInstance) {
 
     }
   )
+
+  fastify.withTypeProvider<ZodTypeProvider>().get('/login/google', (req, reply) => {
+    const url = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: ['https://www.googleapis.com/auth/userinfo.email', 
+        'https://www.googleapis.com/auth/userinfo.profile']
+    })
+
+    reply.redirect(url)
+  })
+
+  fastify.withTypeProvider<ZodTypeProvider>().get(
+    '/auth/google/callback',
+    {
+      schema: {
+        querystring: z.object({
+          code: z.string()
+        })
+      }
+    },
+    async (req, reply) => {
+
+      const { code } = req.query
+
+      const { tokens } = await oauth2Client.getToken(code)
+
+      const userInfo = await getUserInfo(tokens.access_token as string, tokens.refresh_token as string)
+
+      const accountRepository = new AccountRepositoryMongoose()
+      let account
+      try {      
+        const findAccountByEmailUseCase = new FindByEmail(accountRepository)
+        account = await findAccountByEmailUseCase.execute(new Email(userInfo.email as string))
+      } catch (error) {
+        if(error instanceof NotFoundError){
+          const password = await generateRandomPassword(8)
+          const createAccountUseCase = new CreateAccountUseCase(accountRepository)
+          account = await createAccountUseCase.execute({
+            email: userInfo.email as string, 
+            name: userInfo.name as string,
+            password: password,
+            isActive: userInfo.verified_email ?? null
+          })
+        } else {
+          throw error
+        }
+      }
+      const accessToken = generateToken({ email: account.email.value, uuid: account.uuid })
+      return reply.status(200).send({ accessToken })
+
+    })
+
 }
