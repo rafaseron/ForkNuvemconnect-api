@@ -24,7 +24,7 @@ export class LoginUseCase {
       throw new NotFoundError('Invalid email or password')
     }
     if(!account.isActive) {
-      throw new UnprocessableEntityError('Account not active')
+      throw new UnprocessableEntityError('Account not activated')
     }
 
     const tokenPayload: TokenPayload = {

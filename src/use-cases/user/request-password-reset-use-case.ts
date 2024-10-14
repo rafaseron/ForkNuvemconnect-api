@@ -3,6 +3,7 @@ import { SendMail } from '../../domain/shared/send-email'
 import { PasswordResetToken } from '../../domain/entities/passwordResetToken'
 import { IAccountRepository } from '../../domain/repositories/account-repository'
 import { Account } from '../../domain/entities/account'
+import { UnprocessableEntityError } from '../../domain/utils/error-handle'
 
 
 export class RequestPasswordResetUseCase {
@@ -12,16 +13,25 @@ export class RequestPasswordResetUseCase {
     private readonly sendEmail: SendMail
   ){}
   async execute (email: string) {
-    const tokenAlreadyExists = await this.passwordResetToken.existToken(email)
-    if(tokenAlreadyExists) {
-      return
+    const account = <Account>await this.accountRepository.findByEmail(email)
+    if(!account.isActive) {
+      throw new UnprocessableEntityError('Account not activated')
+    }
+    const countTokenAlreadyExists = await this.passwordResetToken.count(email)
+    if(countTokenAlreadyExists === 2) {
+      throw new UnprocessableEntityError('token quantity limit exceeded')
+    } else if (countTokenAlreadyExists === 1) {
+      const [token] = <PasswordResetToken[]>await this.passwordResetToken.findTokenByEmail(email)
+      if(new Date().getMinutes() - token.createdAt.getMinutes() < 1) {
+        throw new UnprocessableEntityError('Wait before requesting a new code')
+      } 
+      token.status = 'deactivated'
     }
 
     const { customAlphabet } = await import('nanoid')
     const nanoid = customAlphabet('0123456789')
     const token = nanoid(6)
     const passwordResetToken = PasswordResetToken.create(email, token)
-    const account = <Account>await this.accountRepository.findByEmail(email)
     this.sendEmail.handle({
       from: {
         name: 'Team nuvem connect',
