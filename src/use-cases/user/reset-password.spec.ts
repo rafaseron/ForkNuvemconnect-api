@@ -16,7 +16,7 @@ describe('Reset Password Use Case', () => {
     passwordResetTokenRepository = new InMemoryPasswordResetTokenRepository()
     accountRepository = new InMemoryAccountRepository()
     resetPassword = new resetPasswordUseCase(passwordResetTokenRepository, accountRepository)
-    passwordResetToken = PasswordResetToken.create('fake@email.com', '93h87c')
+    passwordResetToken = PasswordResetToken.create('fake@email.com', '938746')
     passwordResetTokenRepository.passwordResetTokens.push(passwordResetToken)
   })
 
@@ -26,23 +26,13 @@ describe('Reset Password Use Case', () => {
 
     await resetPassword.execute({
       tokenUUID: passwordResetToken.uuid,
-      token: '93h87c',
+      token: '938746',
       email: 'fake@email.com',
       password: 'NewP@ssw0rd1!'
     })
 
-    //expect(result).toBe('Password updated successfully')
     expect(accountRepository.accounts[0].password).toBe('NewP@ssw0rd1!')
   })
-
-  /* it('should throw an error if the account does not exist', async () => {
-    await expect(
-      resetPassword.execute({
-        email: 'nonexistent@email.com',
-        password: 'NewP@ssw0rd1!'
-      })
-    ).rejects.toThrow(BadRequestError)
-  }) */
 
   it('should throw an error if the password reset token not found', async () => {
     await expect(() => {
@@ -75,7 +65,7 @@ describe('Reset Password Use Case', () => {
     await expect(() => {
       return resetPassword.execute({
         tokenUUID: passwordResetToken.uuid,
-        token: '93h87c',
+        token: '938746',
         email: 'fake@email.com',
         password: 'invalid'
       })

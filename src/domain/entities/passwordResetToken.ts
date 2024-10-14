@@ -36,7 +36,7 @@ export class PasswordResetToken {
   }
 
   static isValidToken (token: string): boolean {
-    const regex = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{6}$/
+    const regex = /^(?=.*[0-9])[0-9]{6}$/
     return regex.test(token)
   }
 
