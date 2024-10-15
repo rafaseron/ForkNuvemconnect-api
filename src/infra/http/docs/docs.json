@@ -143,6 +143,7 @@
       "post": {
         "summary": "request password reset",
         "tags": ["Account"],
+        "description": "Sends a code required to reset the password.  \nIf a second request is made with the same email before the token expires, the code will be resent.  \nHowever, you must wait 1 minute before requesting a new code, and it is not possible to resend the code more than once.",
         "requestBody": {
           "required": true,
           "content": {
@@ -185,7 +186,27 @@
             "$ref": "#/components/responses/BadRequest"
           },
           "422": {
-            "$ref": "#/components/responses/UnprocessableEntity"
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "generalError": {
+                    "$ref": "#/components/examples/generalError"
+                  },
+                  "ResendTokenError": {
+                    "$ref": "#/components/examples/ResendTokenError"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -259,6 +280,77 @@
                   },
                   "invalidPassword": {
                     "$ref": "#/components/examples/passwordMismatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/google": {
+      "get": {
+        "summary": "Google OAuth Login",
+        "description": "Redirects the user to Google's login page to grant permission for email and profile access.",
+        "responses": {
+          "302": {
+            "description": "Redirects to Google's OAuth2 authorization URL."
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "summary": "Google OAuth Callback",
+        "description": "Handles the Google OAuth2 callback, exchanging the authorization code for access and refresh tokens. If the user does not exist, a new account is created.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The authorization code returned by Google after login."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authentication. Returns an access token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "description": "The JWT access token for the authenticated user."
+                    }
+                  },
+                  "example": {
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "description": "Internal server error occurred while processing the login or creating a new account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred while processing the request."
+                    }
                   }
                 }
               }
@@ -372,6 +464,12 @@
       "invalidEmailOrPassword":{
         "value": {
           "message": "Invalid email or password"
+        }
+      },
+      "ResendTokenError":{
+       "description": "Occurs when you attempt to resend the token to the same email before the required wait time has passed.",
+        "value": {
+          "message": "Wait before requesting a new code."
         }
       }
     },
