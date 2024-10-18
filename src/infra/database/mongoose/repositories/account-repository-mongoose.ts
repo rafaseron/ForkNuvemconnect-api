@@ -1,14 +1,9 @@
 import { Email } from '../../../../domain/entities/email'
 import { Account } from '../../../../domain/entities/account'
 import { IAccountRepository, updateAccountType } from '../../../../domain/repositories/account-repository'
-import { hashPassword, comparePassword } from '../../../lib/brcypt'
-import { generateToken } from '../../../lib/jwt'
+import { hashPassword, comparePassword } from '../../../lib/bcrypt'
 import { accountModel } from '../model/account-model'
 
-interface TokenPayload {
-  uuid: string
-  email: string
-}
 
 export class AccountRepositoryMongoose implements IAccountRepository {
   async save (account: Account): Promise<void> {
@@ -41,7 +36,7 @@ export class AccountRepositoryMongoose implements IAccountRepository {
   async findByEmailPassword (
     email: Email,
     password: string
-  ): Promise<string | null> {
+  ): Promise<Account | null> {
     const data = await accountModel.findOne({ email: email.value })
     if (!data) {
       return null
@@ -52,17 +47,15 @@ export class AccountRepositoryMongoose implements IAccountRepository {
       return null
     }
 
-    const tokenPayload: TokenPayload = {
-      uuid: data.uuid,
-      email: data.email
-    }
-
-    const token = await generateToken(tokenPayload)
-    if (!token) {
-      return null
-    }
+    const acc = Account.reconstitute(
+      data.uuid,
+      data.name,
+      data.email,
+      data.password,
+      data.isActive
+    )
+    return acc
     
-    return token
   }
 
   async updatePassword (email: string, password: string): Promise<void> {

@@ -2,12 +2,13 @@ import { randomUUID } from 'crypto'
 import { UnprocessableEntityError } from '../utils/error-handle'
 import { Email } from './email'
 
-
+export type passwordResetTokenStatusType = 'active' | 'deactivated'
 export interface PasswordResetTokenProps {
   uuid: string,
   email: Email,
   token: string
-  createdAt?: Date | null
+  status: passwordResetTokenStatusType
+  createdAt: Date
 }
 
 export class PasswordResetToken {
@@ -31,12 +32,14 @@ export class PasswordResetToken {
     return new PasswordResetToken({
       uuid: randomUUID(),
       email: new Email(email),
-      token
+      token,
+      status: 'active',
+      createdAt: new Date()
     })
   }
 
   static isValidToken (token: string): boolean {
-    const regex = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{6}$/
+    const regex = /^(?=.*[0-9])[0-9]{6}$/
     return regex.test(token)
   }
 
@@ -50,11 +53,18 @@ export class PasswordResetToken {
   get token (): string {
     return this.props.token
   }
+  get status (): string {
+    return this.props.status
+  }
+  
+  set status (status: passwordResetTokenStatusType) {
+    this.props.status = status
+  }
   get email (): Email {
     return this.props.email
   }
 
-  get createdAt (): Date | null | undefined{
+  get createdAt (): Date {
     return this.props.createdAt
   }
 }

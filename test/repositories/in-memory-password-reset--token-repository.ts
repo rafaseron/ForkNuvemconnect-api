@@ -5,6 +5,12 @@ import { PasswordResetTokenRepository } from '../../src/domain/repositories/pass
 
 export class InMemoryPasswordResetTokenRepository implements PasswordResetTokenRepository {
   public passwordResetTokens: PasswordResetToken[] = []
+  async findTokenByEmail (accountEmail: string): Promise<PasswordResetToken[]> {
+    return this.passwordResetTokens.filter(token => token.email.value === accountEmail)
+  }
+  async  count (accountEmail: string): Promise<number> {
+    return this.passwordResetTokens.filter(token => token.email.value === accountEmail).length
+  }
   
   async savePasswordResetToken (passwordResetToken: PasswordResetToken): Promise<void> {
     this.passwordResetTokens.push(passwordResetToken)
